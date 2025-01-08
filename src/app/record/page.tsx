@@ -4,7 +4,14 @@ import { useState, useEffect } from "react";
 import sentences from "../../data/sentences";
 import SentenceRecorder from "../../components/SentenceRecorder";
 
+// Define the Sentence type
+interface Sentence {
+  id: number;
+  text: string;
+}
+
 export default function RecordPage() {
+  const [selectedSentences, setSelectedSentences] = useState<Sentence[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [completed, setCompleted] = useState(false);
   const [userDetails, setUserDetails] = useState<any | null>(null);
@@ -17,10 +24,14 @@ export default function RecordPage() {
       setUserDetails(JSON.parse(details));
     }
     setLoading(false);
+
+    // Randomly select 5 sentences
+    const selected = selectRandomSentences(sentences, 5);
+    setSelectedSentences(selected);
   }, []);
 
   const handleNext = () => {
-    if (currentIndex < sentences.length - 1) {
+    if (currentIndex < selectedSentences.length - 1) {
       setCurrentIndex(currentIndex + 1);
     } else {
       setCompleted(true);
@@ -60,7 +71,7 @@ export default function RecordPage() {
         </div>
       ) : (
         <SentenceRecorder
-          sentence={sentences[currentIndex]}
+          sentence={selectedSentences[currentIndex]}
           index={currentIndex}
           userDetails={userDetails}
           onNext={handleNext}
@@ -69,3 +80,13 @@ export default function RecordPage() {
     </main>
   );
 }
+
+// Utility function to randomly select N unique sentences
+const selectRandomSentences = (array: Sentence[], n: number): Sentence[] => {
+  const shuffled = array
+    .map((item) => ({ ...item, sortKey: Math.random() }))
+    .sort((a, b) => a.sortKey - b.sortKey)
+    .map(({ sortKey, ...item }) => item);
+
+  return shuffled.slice(0, n);
+};

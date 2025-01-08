@@ -31,7 +31,6 @@ export default function SentenceRecorder({
   const [recorder, setRecorder] = useState<MediaRecorder | null>(null);
   const [audioBlob, setAudioBlob] = useState<Blob | null>(null);
 
-  // Reset state when a new sentence is loaded
   useEffect(() => {
     setAudioUrl(null);
     setAudioBlob(null);
@@ -69,7 +68,7 @@ export default function SentenceRecorder({
   const saveRecording = async () => {
     if (audioBlob) {
       const directory = `/uploads/${userDetails.speakerName}`;
-      const filename = `${sentence.id}_${userDetails.gender}_${userDetails.district}_${userDetails.language}_${userDetails.ageGroup}.wav`;
+      const filename = `${sentence.id}_${userDetails.gender}_${userDetails.ageGroup}_${userDetails.district}.wav`;
 
       const formData = new FormData();
       formData.append("audio", audioBlob, filename);
@@ -88,9 +87,11 @@ export default function SentenceRecorder({
   };
 
   return (
-    <div className="space-y-6 text-center">
-      <h2 className="text-xl text-blue-500 font-bold">Sentence {index + 1}: {sentence.text}</h2>
-      <div>
+    <div className="space-y-6 text-center max-w-lg mx-auto p-4 border border-gray-300 rounded-lg shadow-md">
+      <div className="text-lg font-bold text-blue-500">
+        Sentence {index + 1}: {sentence.text}
+      </div>
+      <div className="flex flex-col items-center">
         {!isRecording && !audioUrl ? (
           <button
             onClick={startRecording}
@@ -107,7 +108,11 @@ export default function SentenceRecorder({
           </button>
         ) : (
           <div className="flex flex-col items-center space-y-4">
-            <audio src={audioUrl} controls className="w-full"></audio>
+            <audio
+              src={audioUrl}
+              controls
+              className="w-80"
+            ></audio>
             <div className="flex space-x-4">
               <button
                 onClick={startRecording}
@@ -118,7 +123,7 @@ export default function SentenceRecorder({
               <button
                 onClick={handleNext}
                 className="bg-blue-500 text-white px-6 py-2 rounded-lg shadow-lg hover:bg-blue-600"
-                disabled={!audioBlob} // Disable Next button until recording is available
+                disabled={!audioBlob}
               >
                 Next
               </button>
