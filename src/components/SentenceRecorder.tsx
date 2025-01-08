@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 interface Sentence {
   id: number;
@@ -11,6 +11,7 @@ interface SentenceRecorderProps {
   sentence: Sentence; // Updated type to include `id` and `text`
   index: number;
   userDetails: {
+    speakerName: string;
     language: string;
     gender: string;
     district: string;
@@ -29,6 +30,14 @@ export default function SentenceRecorder({
   const [audioUrl, setAudioUrl] = useState<string | null>(null);
   const [recorder, setRecorder] = useState<MediaRecorder | null>(null);
   const [audioBlob, setAudioBlob] = useState<Blob | null>(null);
+
+  // Reset state when a new sentence is loaded
+  useEffect(() => {
+    setAudioUrl(null);
+    setAudioBlob(null);
+    setIsRecording(false);
+    setRecorder(null);
+  }, [sentence]);
 
   const startRecording = async () => {
     const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
@@ -59,9 +68,12 @@ export default function SentenceRecorder({
 
   const saveRecording = async () => {
     if (audioBlob) {
+      const directory = `/uploads/${userDetails.speakerName}`;
       const filename = `${sentence.id}_${userDetails.gender}_${userDetails.district}_${userDetails.language}_${userDetails.ageGroup}.wav`;
+
       const formData = new FormData();
       formData.append("audio", audioBlob, filename);
+      formData.append("directory", directory);
 
       await fetch("/api/upload", {
         method: "POST",
@@ -77,7 +89,7 @@ export default function SentenceRecorder({
 
   return (
     <div className="space-y-6 text-center">
-      <h2 className="text-xl font-bold">{sentence.text}</h2>
+      <h2 className="text-xl font-bold">Sentence {index + 1}: {sentence.text}</h2>
       <div>
         {!isRecording && !audioUrl ? (
           <button
@@ -106,6 +118,7 @@ export default function SentenceRecorder({
               <button
                 onClick={handleNext}
                 className="bg-blue-500 text-white px-6 py-2 rounded-lg shadow-lg hover:bg-blue-600"
+                disabled={!audioBlob} // Disable Next button until recording is available
               >
                 Next
               </button>
