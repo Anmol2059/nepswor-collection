@@ -120,11 +120,17 @@ export default function Questionnaire() {
             onChange={handleChange}
             required
           >
+           
             <option value="">Select</option>
             <option value="Nepali">Nepali</option>
             <option value="Maithili">Maithili</option>
             <option value="Bhojpuri">Bhojpuri</option>
             <option value="Tharu">Tharu</option>
+            <option value="Tamang">Tamang</option>
+            <option value="Newari">Newari</option>
+            <option value="Bajika">Bajika</option>
+            <option value="Awadhi">Awadhi</option>
+            <option value="Others">Others</option>
           </select>
         </div>
 
