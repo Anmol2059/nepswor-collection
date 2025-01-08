@@ -2,7 +2,8 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import districts from "../../data/districts";
+import districts from "../data/districts";
+
 
 export default function Questionnaire() {
   const router = useRouter();
@@ -109,9 +110,9 @@ export default function Questionnaire() {
             required
           >
             <option value="">Select</option>
-            <option value="below 18">Below 18</option>
-            <option value="18-40">18-40</option>
-            <option value="40+">40+</option>
+            <option value="kid">Below 18</option>
+            <option value="mid">Between 18-40</option>
+            <option value="old">40+</option>
           </select>
         </div>
 

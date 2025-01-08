@@ -89,7 +89,7 @@ export default function SentenceRecorder({
 
   return (
     <div className="space-y-6 text-center">
-      <h2 className="text-xl font-bold">Sentence {index + 1}: {sentence.text}</h2>
+      <h2 className="text-xl text-blue-500 font-bold">Sentence {index + 1}: {sentence.text}</h2>
       <div>
         {!isRecording && !audioUrl ? (
           <button
