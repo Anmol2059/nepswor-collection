@@ -8,7 +8,7 @@ interface Sentence {
 }
 
 interface SentenceRecorderProps {
-  sentence: Sentence; // Updated type to include `id` and `text`
+  sentence: Sentence;
   index: number;
   userDetails: {
     speakerName: string;
@@ -27,12 +27,12 @@ export default function SentenceRecorder({
   onNext,
 }: SentenceRecorderProps) {
   const [isRecording, setIsRecording] = useState(false);
-  const [audioUrl, setAudioUrl] = useState<string | null>(null);
+  const [audioUrl, setAudioUrl] = useState<string>("");  // Changed from string | null to string
   const [recorder, setRecorder] = useState<MediaRecorder | null>(null);
   const [audioBlob, setAudioBlob] = useState<Blob | null>(null);
 
   useEffect(() => {
-    setAudioUrl(null);
+    setAudioUrl("");  // Changed from null to empty string
     setAudioBlob(null);
     setIsRecording(false);
     setRecorder(null);
@@ -108,11 +108,13 @@ export default function SentenceRecorder({
           </button>
         ) : (
           <div className="flex flex-col items-center space-y-4">
-            <audio
-              src={audioUrl}
-              controls
-              className="w-80"
-            ></audio>
+            {audioUrl && (
+              <audio
+                src={audioUrl}
+                controls
+                className="w-80"
+              />
+            )}
             <div className="flex space-x-4">
               <button
                 onClick={startRecording}
